@@ -1,16 +1,25 @@
 package pl.com.bottega.cymes.admin.adapters;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
+
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.com.bottega.cymes.admin.Cinema;
+import pl.com.bottega.cymes.admin.CinemaHall;
+import pl.com.bottega.cymes.admin.CinemaHallRepository;
 import pl.com.bottega.cymes.admin.CinemaRepository;
 import pl.com.bottega.cymes.admin.CreateCinema;
+import pl.com.bottega.cymes.admin.CreateCinemaHall;
 import pl.com.bottega.cymes.admin.CreateMovie;
 import pl.com.bottega.cymes.admin.Movie;
 import pl.com.bottega.cymes.admin.MovieRepository;
+import pl.com.bottega.cymes.admin.Seat;
 
 import javax.transaction.Transactional;
 
@@ -21,6 +30,7 @@ public class AdminEndpoints {
 
     private CinemaRepository cinemaRepository;
     private MovieRepository movieRepository;
+    private CinemaHallRepository cinemaHallRepository;
 
     @PostMapping("/cinemas")
     @Transactional
@@ -43,6 +53,28 @@ public class AdminEndpoints {
             .actors(createMovie.actors)
             .genres(createMovie.genres)
             .build();
+        movieRepository.save(movie);
     }
 
+    @PostMapping("/cinemaHall")
+    @Transactional
+    public void createCinemaHall(@RequestBody CreateCinemaHall createCinemaHall){
+        CinemaHall cinemaHall = CinemaHall.builder()
+                .id(createCinemaHall.cinemaId)
+                .hallName(createCinemaHall.hallName)
+                .cinema(cinemaRepository.findById(createCinemaHall.hallId))
+                .seats(mapSeats(createCinemaHall.seats))
+                .build();
+        cinemaHallRepository.save(cinemaHall);
+    }
+
+    private List<Seat> mapSeats(String [][] seats){
+        List<Seat> seatsList = new ArrayList<>();
+        for (int i = 1; i <= seats.length; i++){
+            for (String number : seats[i]) {
+                seatsList.add(Seat.builder().row(i+"").number(number).build());
+            }
+        }
+        return seatsList;
+    }
 }
