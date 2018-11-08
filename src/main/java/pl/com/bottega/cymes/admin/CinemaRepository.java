@@ -6,6 +6,8 @@ import java.util.UUID;
 
 public interface CinemaRepository extends Repository<Cinema, UUID> {
 
-    void save(Cinema cinema);
+    Cinema save(Cinema cinema);
+
+    Cinema findById(UUID id);
 
 }
