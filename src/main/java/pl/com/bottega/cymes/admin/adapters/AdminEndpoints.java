@@ -5,7 +5,6 @@ import java.util.List;
 
 import lombok.AllArgsConstructor;
 
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,19 +59,21 @@ public class AdminEndpoints {
     @Transactional
     public void createCinemaHall(@RequestBody CreateCinemaHall createCinemaHall){
         CinemaHall cinemaHall = CinemaHall.builder()
-                .id(createCinemaHall.cinemaId)
+                .id(createCinemaHall.hallId)
                 .hallName(createCinemaHall.hallName)
-                .cinema(cinemaRepository.findById(createCinemaHall.hallId))
-                .seats(mapSeats(createCinemaHall.seats))
+                .cinema(cinemaRepository.findById(createCinemaHall.cinemaId))
                 .build();
+        cinemaHall.setSeats(createSeats(createCinemaHall.seats, cinemaHall));
         cinemaHallRepository.save(cinemaHall);
+
+
     }
 
-    private List<Seat> mapSeats(String [][] seats){
+    private List<Seat> createSeats(String [][] seats, CinemaHall cinemaHall){
         List<Seat> seatsList = new ArrayList<>();
-        for (int i = 1; i <= seats.length; i++){
+        for (int i = 0; i < seats.length; i++){
             for (String number : seats[i]) {
-                seatsList.add(Seat.builder().row(i+"").number(number).build());
+                seatsList.add(Seat.builder().row(i+"").number(number).cinemaHall(cinemaHall).build());
             }
         }
         return seatsList;
