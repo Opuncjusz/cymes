@@ -13,8 +13,11 @@ import pl.com.bottega.cymes.admin.CinemaRepository;
 import pl.com.bottega.cymes.admin.CreateCinema;
 import pl.com.bottega.cymes.admin.CreateCinemaHall;
 import pl.com.bottega.cymes.admin.CreateMovie;
+import pl.com.bottega.cymes.admin.CreateShow;
 import pl.com.bottega.cymes.admin.Movie;
 import pl.com.bottega.cymes.admin.MovieRepository;
+import pl.com.bottega.cymes.admin.Show;
+import pl.com.bottega.cymes.admin.ShowRepository;
 import pl.com.bottega.cymes.admin.UpdateCinema;
 
 import javax.transaction.Transactional;
@@ -29,6 +32,7 @@ public class AdminEndpoints {
     private CinemaRepository cinemaRepository;
     private MovieRepository movieRepository;
     private CinemaHallRepository cinemaHallRepository;
+    private ShowRepository showRepository;
 
     @PostMapping("/cinemas")
     @Transactional
@@ -39,9 +43,6 @@ public class AdminEndpoints {
             .name(createCinema.name)
             .build();
         cinema = cinemaRepository.save(cinema);
-
-        cinema.setName("Jajko");
-        cinema.setName("Kura");
     }
 
     @PutMapping("/cinemas")
@@ -76,6 +77,17 @@ public class AdminEndpoints {
             .hallElements(mapHallElements(cmd.seats))
             .build();
         cinemaHallRepository.save(cinemaHall);
+    }
+
+    @PostMapping("/cinemas/shows")
+    public void createShow(@RequestBody CreateShow createShow) {
+        Show show = Show.builder()
+            .cinemaHall(cinemaHallRepository.getOne(createShow.hallId))
+            .id(createShow.showId)
+            .movie(movieRepository.getOne(createShow.movieId))
+            .pricing(createShow.pricing)
+            .time(createShow.time)
+            .build();
     }
 
     private Set<CinemaHall.HallElement> mapHallElements(String[][] seats) {

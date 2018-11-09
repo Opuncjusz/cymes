@@ -8,4 +8,5 @@ public interface CinemaHallRepository extends Repository<CinemaHall, UUID> {
 
     void save(CinemaHall cinemaHall);
 
+    CinemaHall getOne(UUID hallId);
 }

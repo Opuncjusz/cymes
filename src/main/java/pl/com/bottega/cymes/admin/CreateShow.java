@@ -9,9 +9,9 @@ import java.util.UUID;
 
 public class CreateShow implements Command {
 
-    public UUID cinemaId;
+    public UUID showId;
     public UUID movieId;
-    public Integer hallId;
+    public UUID hallId;
     public Instant time;
     public Map<String, BigDecimal> pricing;
 }

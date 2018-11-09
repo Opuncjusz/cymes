@@ -8,4 +8,6 @@ public interface MovieRepository extends Repository<Movie, UUID> {
 
     void save(Movie movie);
 
+    Movie getOne(UUID movieId);
+
 }
