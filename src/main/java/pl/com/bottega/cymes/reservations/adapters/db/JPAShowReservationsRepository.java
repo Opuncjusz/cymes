@@ -27,6 +27,11 @@ public class JPAShowReservationsRepository implements ShowReservationsRepository
         showReservations.export(showReservationRecord);
         entityManager.persist(showReservationRecord);
     }
+
+    @Override
+    public ShowReservations get(UUID uuid) {
+        return null;
+    }
 }
 
 @Entity
