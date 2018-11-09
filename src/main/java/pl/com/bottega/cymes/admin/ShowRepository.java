@@ -1,6 +1,11 @@
 package pl.com.bottega.cymes.admin;
 
-public interface ShowRepository {
+import java.util.UUID;
+
+import org.springframework.data.repository.Repository;
+
+
+public interface ShowRepository extends Repository<Show, UUID> {
 
     void save(Show show);
 

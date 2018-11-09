@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.transaction.Transactional;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +24,9 @@ import pl.com.bottega.cymes.admin.CreateShow;
 import pl.com.bottega.cymes.admin.Movie;
 import pl.com.bottega.cymes.admin.MovieRepository;
 import pl.com.bottega.cymes.admin.Show;
+import pl.com.bottega.cymes.admin.ShowRepository;
 import pl.com.bottega.cymes.admin.UpdateCinema;
+import pl.com.bottega.cymes.events.ShowCreated;
 
 @RestController
 @RequestMapping("/admin")
@@ -33,6 +36,8 @@ public class AdminEndpoints {
     private CinemaRepository cinemaRepository;
     private MovieRepository movieRepository;
     private CinemaHallRepository cinemaHallRepository;
+    private ShowRepository showRepository;
+    private ApplicationEventPublisher eventPublisher;
 
     @PostMapping("/cinemas")
     @Transactional
@@ -88,6 +93,9 @@ public class AdminEndpoints {
                 .pricing(createShow.pricing)
                 .time(createShow.time)
                 .build();
+        showRepository.save(show);
+        eventPublisher.publishEvent(new ShowCreated(createShow.showId));
+
     }
 
     private Set<CinemaHall.HallElement> mapHallElements(String[][] seats) {
