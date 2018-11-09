@@ -1,9 +1,8 @@
 package pl.com.bottega.cymes.reservations.adapters.listeners;
 
+import lombok.AllArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-
-import lombok.AllArgsConstructor;
 import pl.com.bottega.cymes.events.ShowCreated;
 import pl.com.bottega.cymes.reservations.domain.ShowCreatedHandler;
 
@@ -11,10 +10,11 @@ import pl.com.bottega.cymes.reservations.domain.ShowCreatedHandler;
 @AllArgsConstructor
 public class ShowCreatedListener {
 
-    private ShowCreatedHandler showCreatedHandler;
+    private ShowCreatedHandler handler;
 
     @EventListener
-    public void handleShowCreated(ShowCreated showCreated) {
-        showCreatedHandler.handle(showCreated);
+    public void handleShowCreated(ShowCreated event) {
+        handler.handle(event);
     }
+
 }
